@@ -63,7 +63,7 @@ def boobs(bot, update):
     else:
         photo_items_list = get_random_boobs_proc()
 
-    if isinstance(photo_items_list, list):
+    if photo_items_list:
         for photo_item in photo_items_list:
             photo_url = photo_item.get('preview')
 
