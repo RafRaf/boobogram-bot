@@ -4,7 +4,7 @@ Just a simple bot created for fun and relaxation. It's especially needed when yo
 
 How to Use
 ----------
-* Add the bot to your telegram's group. (@boobogram_bot)
+* Add the bot to your telegram's group. (Add **@boobogram_bot** or go to https://telegram.me/boobogram_bot)
 * Type "/boobs" and take a break. :)
 
 How to Contribute
@@ -12,7 +12,7 @@ How to Contribute
 Your PR (or even issue) will be very appreciate. Every PR merged to "master" branch triggers bot's code updating.
 
 How to Install locally
----------------------
+----------------------
 You have to create local.py and define some variables:
 
 .. code:: python
