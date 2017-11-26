@@ -9,14 +9,18 @@ from settings import BOOBS_API_URL, BOOBS_AMOUNT, BOOBS_MEDIA_URL
 class BoobsCommand(AbstractCommand):
     COMMAND = 'boobs'
 
+    @staticmethod
+    def _make_request(url):
+        return requests.get(url)
+
     def get_random_boobs(self):
-        response = requests.get('{}noise/{}/'.format(BOOBS_API_URL, BOOBS_AMOUNT))
+        response = self._make_request('{url}noise/{amount}/'.format(url=BOOBS_API_URL, amount=BOOBS_AMOUNT))
 
         if response.status_code == 200:
             return json.loads(response.text)
 
     def get_boobs_by_model(self, model_name):
-        response = requests.get('{}boobs/model/{}/'.format(BOOBS_API_URL, model_name))
+        response = self._make_request('{url}boobs/model/{name}/'.format(url=BOOBS_API_URL, name=model_name))
 
         if response.status_code == 200:
             photo_items_list = json.loads(response.text)
