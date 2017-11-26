@@ -18,11 +18,11 @@ You have to create local.py and define some variables:
 .. code:: python
 
     import logging
-  
-  
+
+
     # Enable logging
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-  
+
     # Settings
     BOOBS_API_URL = 'http://api.oboobs.ru/'
     BOOBS_MEDIA_URL = 'http://media.oboobs.ru/'
