@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/RafRaf/boobogram-bot.svg?branch=master
+    :target: https://travis-ci.org/RafRaf/boobogram-bot
+
 Boobogram Bot (@boobogram_bot)
 ==============================
 Just a simple bot created for fun and relaxation. It's especially needed when you spend days and nights just coding.
