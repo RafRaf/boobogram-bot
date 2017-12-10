@@ -14,7 +14,7 @@ How to Contribute
 -----------------
 Your PR (or even issue) will be very appreciate. Every PR merged to "master" branch triggers bot's code updating.
 
-How to Install locally
+How to Use locally
 ----------------------
 You have to create local.py and define some variables:
 
@@ -31,5 +31,12 @@ You have to create local.py and define some variables:
     BOOBS_MEDIA_URL = 'http://media.oboobs.ru/'
     BOOBS_AMOUNT = 1
     BOOBS_TOKEN = '***'
+
+Docker support
+--------------
+You can build your own boobogram_bot container:
+
+* docker build . -t boobs
+* docker run -v /path_to_project_folder/boobogram-bot:/app --rm boobs
 
 Have fun! ( . )( . )
