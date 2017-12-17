@@ -38,6 +38,6 @@ Docker support
 You can build your own boobogram_bot container:
 
 * docker build . -t boobs
-* docker run -v /path_to_project_folder/boobogram-bot:/app --rm boobs
+* docker run -v $(pwd):/app --rm boobs
 
 Have fun! ( . )( . )
