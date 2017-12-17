@@ -1,6 +1,6 @@
 .. image:: https://travis-ci.org/RafRaf/boobogram-bot.svg?branch=master
     :target: https://travis-ci.org/RafRaf/boobogram-bot
-.. image:: https://coveralls.io/repos/github/RafRaf/boobogram-bot/badge.svg?branch=master
+.. image:: https://coveralls.io/repos/github/RafRaf/boobogram-bot/badge.svg?branch=feature/test-coverage
 
 Boobogram Bot (@boobogram_bot)
 ==============================
