@@ -52,9 +52,10 @@ def test_start(command, bot, update):
     bot.sendMessage.assert_called_with(update.message.chat_id, text=text)
 
 
+@patch('commands.boobs.BoobsCommand.get_boobs_by_model')
 @patch('commands.boobs.BoobsCommand._make_request')
 @use_command(BoobsCommand)
-def test_boobs(command, bot, update, make_request):
+def test_boobs_random(command, bot, update, make_request, get_boobs_by_model):
     photo_url = 'image.jpg'
     make_request.return_value = get_request_mock([{'id': 1, 'preview': photo_url}])
 
@@ -66,3 +67,29 @@ def test_boobs(command, bot, update, make_request):
 
     # waiting for `sendPhoto` call
     bot.sendPhoto.assert_called_with(update.message.chat_id, photo=BOOBS_MEDIA_URL + photo_url)
+
+    # if no model name provided, `get_boobs_by_model` must not be called
+    get_boobs_by_model.assert_not_called()
+
+
+@patch('commands.boobs.BoobsCommand.get_boobs_by_model')
+@patch('commands.boobs.BoobsCommand._make_request')
+@use_command(BoobsCommand)
+def test_boobs_by_model(command, bot, update, make_request, get_boobs_by_model):
+    photo_url = 'image.jpg'
+    payload = [{'id': 1, 'preview': photo_url}]
+    make_request.return_value = get_request_mock(payload)
+    get_boobs_by_model.return_value = payload
+
+    # command name & message
+    message = 'pamela shmanderson'
+    update.message.text = 'boobs %s' % message
+
+    # run handler
+    command.handler(bot, update)
+
+    # waiting for `sendPhoto` call
+    bot.sendPhoto.assert_called_with(update.message.chat_id, photo=BOOBS_MEDIA_URL + photo_url)
+
+    # check for `get_boobs_by_model` call
+    get_boobs_by_model.assert_called_with(message)

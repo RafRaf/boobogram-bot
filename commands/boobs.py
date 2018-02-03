@@ -26,7 +26,7 @@ class BoobsCommand(AbstractCommand):
             photo_items_list = json.loads(response.text)
 
             if len(photo_items_list) > BOOBS_AMOUNT:
-                photo_items_id_list = (item['id'] for item in photo_items_list)
+                photo_items_id_list = [item['id'] for item in photo_items_list]
                 processed_photo_items_list = set()
 
                 while len(processed_photo_items_list) != BOOBS_AMOUNT:
@@ -38,7 +38,9 @@ class BoobsCommand(AbstractCommand):
 
     def handler(self, bot, update):
         cmd, *params = update.message.text.split()
-        photo_items = self.get_boobs_by_model(' '.join(params)) if params else self.get_random_boobs()
+        message = ' '.join(params)
+
+        photo_items = self.get_boobs_by_model(message) if message else self.get_random_boobs()
 
         if photo_items:
             for photo_item in photo_items:
@@ -47,4 +49,4 @@ class BoobsCommand(AbstractCommand):
                 if photo_url:
                     bot.sendPhoto(update.message.chat_id, photo=BOOBS_MEDIA_URL + photo_url)
         else:
-            bot.sendMessage(update.message.chat_id, text='"%s" - not found :(' % params)
+            bot.sendMessage(update.message.chat_id, text='"%s" - not found :(' % message)
