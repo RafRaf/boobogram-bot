@@ -1,29 +1,34 @@
 import json
 import random
-import requests
+import aiohttp
 
 from commands.abstract import AbstractCommand
 from settings import BOOBS_API_URL, BOOBS_AMOUNT, BOOBS_MEDIA_URL
 
 
 class BoobsCommand(AbstractCommand):
-    COMMAND = 'boobs'
+    COMMAND = "boobs"
 
     @staticmethod
-    def _make_request(url):
-        return requests.get(url)
+    async def _make_request(url):
+        async with aiohttp.ClientSession() as session:
+            resp = await session.get(url)
 
-    def get_random_boobs(self):
-        response = self._make_request('{url}noise/{amount}/'.format(url=BOOBS_API_URL, amount=BOOBS_AMOUNT))
+            return resp.status, await resp.read()
 
-        if response.status_code == 200:
-            return json.loads(response.text)
+    async def get_random_boobs(self):
+        url = f"{BOOBS_API_URL}noise/{BOOBS_AMOUNT}/"
+        code, resp = await self._make_request(url)
 
-    def get_boobs_by_model(self, model_name):
-        response = self._make_request('{url}boobs/model/{name}/'.format(url=BOOBS_API_URL, name=model_name))
+        if code == 200:
+            return json.loads(resp)
 
-        if response.status_code == 200:
-            photo_items_list = json.loads(response.text)
+    async def get_boobs_by_model(self, model_name):
+        url = f"{BOOBS_API_URL}boobs/model/{model_name}/"
+        code, resp = await self._make_request(url)
+
+        if code == 200:
+            photo_items_list = json.loads(resp)
 
             if len(photo_items_list) > BOOBS_AMOUNT:
                 photo_items_id_list = [item['id'] for item in photo_items_list]
@@ -32,21 +37,30 @@ class BoobsCommand(AbstractCommand):
                 while len(processed_photo_items_list) != BOOBS_AMOUNT:
                     processed_photo_items_list.add(random.choice(photo_items_id_list))
 
-                return [item for item in photo_items_list if item['id'] in processed_photo_items_list]
+                return [
+                    item
+                    for item in photo_items_list if item['id'] in processed_photo_items_list
+                ]
 
             return photo_items_list
 
-    def handler(self, bot, update):
-        cmd, *params = update.message.text.split()
+    async def handler(self, update, context):
+        _, *params = update.message.text.split()
         message = ' '.join(params)
+        coro = self.get_boobs_by_model(message) \
+            if message else self.get_random_boobs()
 
-        photo_items = self.get_boobs_by_model(message) if message else self.get_random_boobs()
-
-        if photo_items:
+        if photo_items := await coro:
             for photo_item in photo_items:
                 photo_url = photo_item.get('preview')
 
                 if photo_url:
-                    bot.sendPhoto(update.message.chat_id, photo=BOOBS_MEDIA_URL + photo_url)
+                    await context.bot.send_photo(
+                        chat_id=update.effective_chat.id,
+                        photo=BOOBS_MEDIA_URL + photo_url
+                    )
         else:
-            bot.sendMessage(update.message.chat_id, text='"%s" - not found :(' % message)
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text="\"%s\" - not found :(" % message
+            )

@@ -3,27 +3,30 @@ import inspect
 import logging
 import os
 
+from telegram.ext import CommandHandler
+
 from commands.abstract import AbstractCommand
 
 logger = logging.getLogger(__name__)
 
 
-def echo_handler(bot, update):
+async def echo_handler(update, context):
     if update.message.text:
-        message = 'What does "%s" mean?\nTry to type /help.' % update.message.text
-        bot.sendMessage(update.message.chat_id, text=message)
+        text = \
+            f"What does \"{update.message.text}\" mean?\nTry to type /help."
+
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=text
+        )
 
 
-def error_handler(bot, update, error):
-    logger.warning('Update "%s" caused error "%s"', update, error)
-
-
-def autodiscovery(dispatcher):
+def autodiscovery(application):
     """
     Discover all available commands
-    :param dispatcher: an updater's dispatcher
+    :param application: application
     """
-    commands_module_name = 'commands'
+    commands_module_name = "commands"
     directory = os.fsencode(commands_module_name)
 
     for file in os.listdir(directory):
@@ -39,4 +42,4 @@ def autodiscovery(dispatcher):
             # Iterate over classes and register discovered commands
             for _, klass in inspect.getmembers(module, inspect.isclass):
                 if issubclass(klass, AbstractCommand) and klass is not AbstractCommand:
-                    dispatcher.addTelegramCommandHandler(klass.COMMAND, klass().handler)
+                    application.add_handler(CommandHandler(klass.COMMAND, klass().handler))

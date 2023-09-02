@@ -1,5 +1,5 @@
 class AbstractCommand:
-    COMMAND = '*TYPE COMMAND HERE*'
+    COMMAND = "*TYPE COMMAND HERE*"
 
-    def handler(self, bot, update):
-        raise NotImplementedError('Handler is not implemented')
+    async def handler(self, update, context):
+        raise NotImplementedError("Handler is not implemented")
