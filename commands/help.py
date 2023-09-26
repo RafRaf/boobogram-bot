@@ -2,9 +2,13 @@ from commands.abstract import AbstractCommand
 
 
 class HelpCommand(AbstractCommand):
-    COMMAND = 'help'
+    COMMAND = "help"
 
-    def handler(self, bot, update):
+    async def handler(self, update, context):
         help_lines = "\"/boobs\" - get random boobs\n"\
                      "\"/boobs\" model name - get boobs of your favorite model"
-        bot.sendMessage(update.message.chat_id, text=help_lines)
+
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=help_lines
+        )

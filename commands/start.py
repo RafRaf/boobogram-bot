@@ -2,7 +2,10 @@ from commands.abstract import AbstractCommand
 
 
 class StartCommand(AbstractCommand):
-    COMMAND = 'start'
+    COMMAND = "start"
 
-    def handler(self, bot, update):
-        bot.sendMessage(update.message.chat_id, text='Hi! Boobogram Bot welcomes you! (.)(.)')
+    async def handler(self, update, context):
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="Hi! Boobogram Bot welcomes you! (.)(.)"
+        )
